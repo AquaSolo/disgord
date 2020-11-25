@@ -1,8 +1,8 @@
-// Declare this file to be part of the main package so it can be compiled into
-// an executable.
+// Объявите этот файл частью основного пакета, чтобы его можно было собрать в
+// исполняемый файл.
 package main
 
-// Import all Go packages required for this file.
+// Добавьте все необходимые пакеты Go.
 import (
 	"flag"
 	"fmt"
@@ -14,19 +14,19 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-// Version is a constant that stores the Disgord version information.
+// Версия - это константа, в которой хранится информация о версии Disgord.
 const Version = "v0.0.0-alpha"
 
-// Session is declared in the global space so it can be easily used
-// throughout this program.
-// In this use case, there is no error that would be returned.
+// Session объявлен в глобальном пространстве, поэтому его можно легко использовать
+// в любом месте программы.
+// В этом случае ошибки не будет. Поэтому мы не будем её обрабатывать.
 var Session, _ = discordgo.New()
 
-// Read in all configuration options from both environment variables and
-// command line arguments.
+// Считываем все параметры конфигурации из переменных
+// среды и аргументов командной строки.
 func init() {
 
-	// Discord Authentication Token
+	// Токен аутентификации Discord.
 	Session.Token = os.Getenv("DG_TOKEN")
 	if Session.Token == "" {
 		flag.StringVar(&Session.Token, "t", "", "Discord Authentication Token")
@@ -35,10 +35,10 @@ func init() {
 
 func main() {
 
-	// Declare any variables needed later.
+	// Объявите все необходимые здесь.
 	var err error
 
-	// Print out a fancy logo!
+	// Распечатайте красивый логотип.
 	fmt.Printf(` 
 	________  .__                               .___
 	\______ \ |__| ______ ____   ___________  __| _/
@@ -47,30 +47,30 @@ func main() {
 	||______  /__/____  >___  / \____/|__|  \____ | 
 	\_______\/        \/_____/   %-16s\/`+"\n\n", Version)
 
-	// Parse command line arguments
+	// Анализируйте аргументы командной строки.
 	flag.Parse()
 
-	// Verify a Token was provided
+	// Убедитесь, что токен был предоставлен.
 	if Session.Token == "" {
 		log.Println("You must provide a Discord authentication token.")
 		return
 	}
 
-	// Open a websocket connection to Discord
+	// Откройте подключение к Discord через веб-соединение.
 	err = Session.Open()
 	if err != nil {
 		log.Printf("error opening connection to Discord, %s\n", err)
 		os.Exit(1)
 	}
 
-	// Wait for a CTRL-C
+	// Ждём CTRL-C.
 	log.Printf(`Now running. Press CTRL-C to exit.`)
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	<-sc
 
-	// Clean up
+	// Заканчиваем.
 	Session.Close()
 
-	// Exit Normally.
+	// Выход.
 }

@@ -2,18 +2,11 @@
 [![Discord Gophers](https://img.shields.io/badge/Discord%20Gophers-%23info-blue.svg)](https://discord.gg/0f1SbxBZjYq9jLBk)
 <img align="right" src="https://raw.githubusercontent.com/wiki/bwmarrin/disgord/images/gourd.jpg">
 
-Dis**go**rd is an example of or starting point for creating an easy to use and 
-extensible Discord bot using the [DiscordGo](https://github.com/bwmarrin/discordgo) 
-library.
+Disgord является примером или отправной точкой для создания простого в использовании и расширяемого бота Discord с использованием библиотеки [DiscordGo](https://github.com/bwmarrin/discordgo).
 
-**This folder contains various experimental packages that can be used with Disgord
-or DiscordGo. The packages here may change wildly - so be sure you look for 
-changes before pulling in updates.**
+**Эта папка содержит различные экспериментальные пакеты, которые можно использовать с Disgord или DiscordGo. Пакеты здесь могут сильно меняться, поэтому обязательно ищите изменения, прежде чем загружать обновления.**
 
-If you would like to help the Disgord or DiscordGo package please use 
-[this link](https://discordapp.com/oauth2/authorize?client_id=173113690092994561&scope=bot)
-to add the official DiscordGo test bot **dgo** to your server. This provides 
-indispensable help to this project.
+Если вы хотите помочь пакету Disgord или DiscordGo, используйте эту
+[ссылку](https://discordapp.com/oauth2/authorize?client_id=173113690092994561&scope=bot) для добавления официального тестового бота DiscordGo *dgo* на ваш сервер. Тем самым вы окажете незаменимую помощь.
 
-**For help with this program or general Go discussion, please join the [Discord 
-Gophers](https://discord.gg/0f1SbxBZjYq9jLBk) chat server.**
+**Чтобы получить помощь по этой программе или обсудить Go, присоединяйтесь к [Discord Gophers](https://discord.gg/0f1SbxBZjYq9jLBk).**

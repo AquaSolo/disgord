@@ -1,20 +1,23 @@
 package main
 
-// This file adds the Disgord message route multiplexer, aka "command router".
-// to the Disgord bot. This is an optional addition however it is included
-// by default to demonstrate how to extend the Disgord bot.
+// Этот файл добавляет мультиплексор маршрута сообщений Disgord,
+// также известный как «командный маршрутизатор».
+// Это необязательное дополнение, но оно включено
+// чтобы продемонстрировать, как расширить бота Discord.
 
-import "github.com/bwmarrin/disgord/x/mux"
+import (
+	"github.com/bwmarrin/disgord/x/mux"
+)
 
-// Router is registered as a global variable to allow easy access to the
-// multiplexer throughout the bot.
+// Маршрутизатор зарегистрирован как глобальная переменная,
+// чтобы обеспечить легкий доступ к мультиплексору во всем боте.
 var Router = mux.New()
 
 func init() {
-	// Register the mux OnMessageCreate handler that listens for and processes
-	// all messages received.
+	// Запустите обработчик мультиплексора OnMessageCreate,
+	// который прослушивает и обрабатывает все полученные сообщения.
 	Session.AddHandler(Router.OnMessageCreate)
 
-	// Register the build-in help command.
+	// Регистрируем встроенную команду справки.
 	Router.Route("help", "Display this message.", Router.Help)
 }
