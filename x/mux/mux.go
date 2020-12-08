@@ -1,6 +1,6 @@
-// Package mux provides a simple Discord message route multiplexer that
-// parses messages and then executes a matching registered handler, if found.
-// mux can be used with both Disgord and the DiscordGo library.
+// Пакет mux предоставляет простой мультиплексор маршрутов сообщений Discord, который
+// анализирует сообщения, а затем выполняет соответствующий зарегистрированный обработчик, если он найден.
+// Mux может использоваться как с Disgord, так и с библиотекой DiscordGo.
 package mux
 
 import (
@@ -12,16 +12,17 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-// Route holds information about a specific message route handler
+// Маршрут содержит информацию об определенном обработчике маршрута сообщения.
 type Route struct {
-	Pattern     string      // match pattern that should trigger this route handler
-	Description string      // short description of this route
-	Help        string      // detailed help string for this route
-	Run         HandlerFunc // route handler function to call
+	Pattern     string      // шаблон соответствия, который должен запускать этот обработчик маршрута
+	Description string      // краткое описание этого маршрута
+	Help        string      // подробная справочная строка для этого маршрута
+	Run         HandlerFunc // функция обработчика маршрута для вызова
 }
 
-// Context holds a bit of extra data we pass along to route handlers
-// This way processing some of this only needs to happen once.
+// Context содержит немного дополнительных данных,
+// которые мы передаем обработчикам маршрутов
+// Таким образом, обработка некоторых из них должна происходить только один раз.
 type Context struct {
 	Fields          []string
 	Content         string
@@ -32,24 +33,24 @@ type Context struct {
 	HasMentionFirst bool
 }
 
-// HandlerFunc is the function signature required for a message route handler.
+// HandlerFunc - подпись функции, необходимая для обработчика маршрута сообщения.
 type HandlerFunc func(*discordgo.Session, *discordgo.Message, *Context)
 
-// Mux is the main struct for all mux methods.
+// Mux - основная структура для всех методов мультиплексирования.
 type Mux struct {
 	Routes  []*Route
 	Default *Route
 	Prefix  string
 }
 
-// New returns a new Discord message route mux
+// New возвращает новый мультиплексор маршрута сообщений Discord.
 func New() *Mux {
 	m := &Mux{}
 	m.Prefix = "-dg "
 	return m
 }
 
-// Route allows you to register a route
+// Route позволяет зарегистрировать маршрут.
 func (m *Mux) Route(pattern, desc string, cb HandlerFunc) (*Route, error) {
 
 	r := Route{}
@@ -61,18 +62,18 @@ func (m *Mux) Route(pattern, desc string, cb HandlerFunc) (*Route, error) {
 	return &r, nil
 }
 
-// FuzzyMatch attempts to find the best route match for a given message.
+// FuzzyMatch пытается найти лучший маршрут для данного сообщения.
 func (m *Mux) FuzzyMatch(msg string) (*Route, []string) {
 
-	// Tokenize the msg string into a slice of words
+	// Преобразование строки сообщения в фрагмент слов.
 	fields := strings.Fields(msg)
 
-	// no point to continue if there's no fields
+	// нет смысла продолжать, если нет полей.
 	if len(fields) == 0 {
 		return nil, nil
 	}
 
-	// Search though the command list for a match
+	// Найдите совпадение в списке команд.
 	var r *Route
 	var rank int
 
@@ -81,12 +82,12 @@ func (m *Mux) FuzzyMatch(msg string) (*Route, []string) {
 
 		for _, rv := range m.Routes {
 
-			// If we find an exact match, return that immediately.
+			// Если мы найдем точное совпадение, немедленно верните его.
 			if rv.Pattern == fv {
 				return rv, fields[fk:]
 			}
 
-			// Some "Fuzzy" searching...
+			// Какой-то "Fuzzy" поиск...
 			if strings.HasPrefix(rv.Pattern, fv) {
 				if len(fv) > rank {
 					r = rv
@@ -98,51 +99,51 @@ func (m *Mux) FuzzyMatch(msg string) (*Route, []string) {
 	return r, fields[fk:]
 }
 
-// OnMessageCreate is a DiscordGo Event Handler function.  This must be
-// registered using the DiscordGo.Session.AddHandler function.  This function
-// will receive all Discord messages and parse them for matches to registered
-// routes.
+// OnMessageCreate это функция обработчика событий DiscordGo. Это должно быть
+// зарегистрировано с помощью функции DiscordGo.Session.AddHandler. Эта функция
+// получит все сообщения Discord и проанализирует их на соответствие зарегистрированным
+// маршрутам.
 func (m *Mux) OnMessageCreate(ds *discordgo.Session, mc *discordgo.MessageCreate) {
 
 	var err error
 
-	// Ignore all messages created by the Bot account itself
+	// Игнорировать все сообщения, созданные самой учетной записью бота.
 	if mc.Author.ID == ds.State.User.ID {
 		return
 	}
 
-	// Create Context struct that we can put various infos into
+	// Создаёт Context struct, в которую мы можем помещать различную информацию.
 	ctx := &Context{
 		Content: strings.TrimSpace(mc.Content),
 	}
 
-	// Fetch the channel for this Message
+	// Fetch the channel for this Message.
 	var c *discordgo.Channel
 	c, err = ds.State.Channel(mc.ChannelID)
 	if err != nil {
-		// Try fetching via REST API
+		// Попробуйте получить через REST API.
 		c, err = ds.Channel(mc.ChannelID)
 		if err != nil {
-			log.Printf("unable to fetch Channel for Message, %s", err)
+			log.Printf("невозможно получить канал для сообщения, %s", err)
 		} else {
-			// Attempt to add this channel into our State
+			// Попытка добавить этот канал в наш State.
 			err = ds.State.ChannelAdd(c)
 			if err != nil {
-				log.Printf("error updating State with Channel, %s", err)
+				log.Printf("ошибка обновления состояния с помощью канала, %s", err)
 			}
 		}
 	}
-	// Add Channel info into Context (if we successfully got the channel)
+	// Добавляет Channel информацию в Context (если мы успешно получили канал).
 	if c != nil {
 		if c.Type == discordgo.ChannelTypeDM {
 			ctx.IsPrivate, ctx.IsDirected = true, true
 		}
 	}
 
-	// Detect @name or @nick mentions
+	// Обнаруживает @name или @nick упоминания.
 	if !ctx.IsDirected {
 
-		// Detect if Bot was @mentioned
+		// Определить, был ли Bot @mentioned
 		for _, v := range mc.Mentions {
 
 			if v.ID == ds.State.User.ID {
@@ -151,12 +152,12 @@ func (m *Mux) OnMessageCreate(ds *discordgo.Session, mc *discordgo.MessageCreate
 
 				reg := regexp.MustCompile(fmt.Sprintf("<@!?(%s)>", ds.State.User.ID))
 
-				// Was the @mention the first part of the string?
+				// Было ли @mention первой частью строки?
 				if reg.FindStringIndex(ctx.Content)[0] == 0 {
 					ctx.HasMentionFirst = true
 				}
 
-				// strip bot mention tags from content string
+				// удалить теги упоминания бота из строки содержимого.
 				ctx.Content = reg.ReplaceAllString(ctx.Content, "")
 
 				break
@@ -164,23 +165,23 @@ func (m *Mux) OnMessageCreate(ds *discordgo.Session, mc *discordgo.MessageCreate
 		}
 	}
 
-	// Detect prefix mention
+	// Обнаружить упоминание префикса
 	if !ctx.IsDirected && len(m.Prefix) > 0 {
 
-		// TODO : Must be changed to support a per-guild user defined prefix
+		// TODO : Необходимо изменить, чтобы поддерживать префикс, определяемый пользователем для каждой гильдии.
 		if strings.HasPrefix(ctx.Content, m.Prefix) {
 			ctx.IsDirected, ctx.HasPrefix, ctx.HasMentionFirst = true, true, true
 			ctx.Content = strings.TrimPrefix(ctx.Content, m.Prefix)
 		}
 	}
 
-	// For now, if we're not specifically mentioned we do nothing.
-	// later I might add an option for global non-mentioned command words
+	// На данный момент, если мы специально не упомянули, мы ничего не делаем.
+	// позже я могу добавить опцию для глобальных не упомянутых командных слов
 	if !ctx.IsDirected {
 		return
 	}
 
-	// Try to find the "best match" command out of the message.
+	// // Пытаемся найти в сообщении команду "best match".
 	r, fl := m.FuzzyMatch(ctx.Content)
 	if r != nil {
 		ctx.Fields = fl
@@ -188,13 +189,13 @@ func (m *Mux) OnMessageCreate(ds *discordgo.Session, mc *discordgo.MessageCreate
 		return
 	}
 
-	// If no command match was found, call the default.
-	// Ignore if only @mentioned in the middle of a message
+	// Если совпадений команд не найдено, вызовите значение по умолчанию.
+	// Игнорировать, если только @mentioned в середине сообщения
 	if m.Default != nil && (ctx.HasMentionFirst) {
-		// TODO: This could use a ratelimit
-		// or should the ratelimit be inside the cmd handler?..
-		// In the case of "talking" to another bot, this can create an endless
-		// loop.  Probably most common in private messages.
+		// TODO: здесь можно использовать ratelimit
+		// или ratelimit должен быть внутри обработчика cmd? ..
+		// В случае "разговора" с другим ботом это может создать бесконечный
+		// цикл. Наверное, чаще всего встречается в личных сообщениях.
 		m.Default.Run(ds, mc.Message, ctx)
 	}
 
