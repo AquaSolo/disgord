@@ -9,7 +9,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/AquaSolo/discordgo"
+	"github.com/bwmarrin/discordgo"
 )
 
 // Маршрут содержит информацию об определенном обработчике маршрута сообщения.
