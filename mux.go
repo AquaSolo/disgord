@@ -6,7 +6,7 @@ package main
 // чтобы продемонстрировать, как расширить бота Discord.
 
 import (
-	"github.com/bwmarrin/disgord/x/mux"
+	"github.com/bwmarrin/AquaSolo/x/mux"
 )
 
 // Маршрутизатор зарегистрирован как глобальная переменная,
