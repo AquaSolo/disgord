@@ -11,7 +11,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/AquaSolo/discordgo"
+	"github.com/bwmarrin/discordgo"
 )
 
 // Версия - это константа, в которой хранится информация о версии Disgord.
