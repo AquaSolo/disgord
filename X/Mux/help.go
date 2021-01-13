@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strconv"
 
-	"github.com/AquaSolo/discordgo"
+	"github.com/bwmarrin/discordgo"
 )
 
 // Help функция обеспечивает встроенную команду "help" команда, которая отобразит список
